@@ -23,15 +23,15 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per implementation plan in repository root
-- [ ] T002 Initialize Python 3.14+ project with pyproject.toml and dependencies (ccxt, asyncio, pydantic, structlog, pandas, numpy, sqlalchemy, asyncpg, pytest, pytest-asyncio, pytest-cov, pytest-mock)
-- [ ] T003 [P] Configure linting and formatting tools (Black, Ruff, MyPy) in pyproject.toml
-- [ ] T004 [P] Create .env.example template with database URL, API keys placeholders, trading config in repository root
-- [ ] T005 [P] Create .gitignore file excluding .env, __pycache__, *.pyc, .venv, data/ in repository root
-- [ ] T006 [P] Create Docker configuration files (Dockerfile, docker-compose.yml, .dockerignore) in docker/ directory
-- [ ] T007 [P] Create scripts/setup.sh for environment setup in scripts/ directory
-- [ ] T008 [P] Create scripts/migrate.sh for database migrations in scripts/ directory
-- [ ] T009 [P] Create README.md with project overview, setup instructions, and quick start guide in repository root
+- [X] T001 Create project structure per implementation plan in repository root
+- [X] T002 Initialize Python 3.14+ project with pyproject.toml and dependencies (ccxt, asyncio, pydantic, structlog, pandas, numpy, sqlalchemy, asyncpg, pytest, pytest-asyncio, pytest-cov, pytest-mock)
+- [X] T003 [P] Configure linting and formatting tools (Black, Ruff, MyPy) in pyproject.toml
+- [X] T004 [P] Create .env.example template with database URL, API keys placeholders, trading config in repository root
+- [X] T005 [P] Create .gitignore file excluding .env, __pycache__, *.pyc, .venv, data/ in repository root
+- [X] T006 [P] Create Docker configuration files (Dockerfile, docker-compose.yml, .dockerignore) in docker/ directory
+- [X] T007 [P] Create scripts/setup.sh for environment setup in scripts/ directory
+- [X] T008 [P] Create scripts/migrate.sh for database migrations in scripts/ directory
+- [X] T009 [P] Create README.md with project overview, setup instructions, and quick start guide in repository root
 
 ---
 

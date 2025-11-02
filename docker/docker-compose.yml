@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: btc-trading-db
+    environment:
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: trader_password
+      POSTGRES_DB: btc_trading
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trader -d btc_trading"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - trading-network
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: btc-trading-app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://trader:trader_password@postgres:5432/btc_trading
+      LOG_LEVEL: INFO
+      LOG_FORMAT: json
+      ENVIRONMENT: development
+    volumes:
+      - ../src:/app/src:ro
+      - ../data:/app/data:rw
+      - ../.env:/app/.env:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - trading-network
+    command: tail -f /dev/null  # Keep container running for development
+
+networks:
+  trading-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
