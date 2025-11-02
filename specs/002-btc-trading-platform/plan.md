@@ -19,12 +19,13 @@ Build a medium-frequency algorithmic trading platform for BTC that manages multi
   - `structlog` or `loguru` - Structured logging for observability
   - `pandas` - Data manipulation for backtesting and market data processing
   - `numpy` - Numerical computations for technical indicators and metrics
-  - Database library (TBD in research) - PostgreSQL, SQLite, or TimescaleDB for audit trails and session data
+  - `sqlalchemy` + `asyncpg` - PostgreSQL + TimescaleDB for audit trails and session data (per research.md)
+  - `timescaledb` - TimescaleDB extension for time-series hypertables
   - Docker - Containerization for portability across cloud platforms
 
 **Storage**: 
-  - Database: NEEDS CLARIFICATION - PostgreSQL (production-ready, audit trails), SQLite (simplicity, portability), or TimescaleDB (time-series optimized for metrics)
-  - File storage: Historical market data storage (format TBD in research)
+  - Database: PostgreSQL + TimescaleDB (hypertables for time-series data) - Decision per research.md
+  - File storage: Historical market data storage in Parquet files with date partitioning (per research.md)
   - Configuration: YAML/JSON files for strategy configs
 
 **Testing**: 
