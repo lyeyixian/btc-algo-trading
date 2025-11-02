@@ -343,23 +343,23 @@
 
 1. Complete Phase 1: Setup (9 tasks)
 2. Complete Phase 2: Foundational (13 tasks)
-3. Complete Phase 3: User Story 1 (23 tasks: 6 tests + 17 implementation)
+3. Complete Phase 3: User Story 1 (22 tasks: 6 tests + 16 implementation)
 4. **STOP and VALIDATE**: Test User Story 1 independently - can backtest strategies and view results
 5. Deploy/demo if ready
 
-**Total MVP Tasks**: 45 tasks (9 + 13 + 23)
+**Total MVP Tasks**: 44 tasks (9 + 13 + 22)
 
 ### Incremental Delivery
 
 1. Complete Setup + Foundational → Foundation ready (22 tasks: 9 + 13)
-2. Add User Story 1 → Test independently → Deploy/Demo (MVP!) (23 tasks: 6 tests + 17 implementation)
+2. Add User Story 1 → Test independently → Deploy/Demo (MVP!) (22 tasks: 6 tests + 16 implementation)
 3. Add User Story 2 → Test independently → Deploy/Demo (31 tasks: 6 tests + 25 implementation)
 4. Add User Story 3 → Test independently → Deploy/Demo (20 tasks: 7 tests + 13 implementation)
 5. Add User Story 4 → Test independently → Deploy/Demo (20 tasks: 5 tests + 15 implementation)
 6. Add User Story 5 → Test independently → Deploy/Demo (14 tasks: 3 tests + 11 implementation)
 7. Add Polish phase → Final optimizations (9 tasks)
 
-**Total Full Implementation**: 139 tasks
+**Total Full Implementation**: 138 tasks
 
 ### Parallel Team Strategy
 
@@ -367,7 +367,7 @@ With multiple developers:
 
 1. Team completes Setup + Foundational together (22 tasks)
 2. Once Foundational is done:
-   - Developer A: User Story 1 (21 tasks)
+   - Developer A: User Story 1 (22 tasks)
    - Developer B: Prepare for User Story 2 (research, design)
 3. After US1 complete:
    - Developer A: User Story 2 (26 tasks)
