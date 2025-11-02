@@ -365,7 +365,7 @@
 
 With multiple developers:
 
-1. Team completes Setup + Foundational together (21 tasks)
+1. Team completes Setup + Foundational together (22 tasks)
 2. Once Foundational is done:
    - Developer A: User Story 1 (21 tasks)
    - Developer B: Prepare for User Story 2 (research, design)
