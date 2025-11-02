@@ -31,7 +31,18 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify compliance with BTC Algo Trading Constitution principles:
+
+- **I. Test-First Development**: Plan includes test strategy (unit, integration, backtesting)
+- **II. Type Safety & Code Quality**: Python 3.11+, type hints, MyPy, Black, Ruff configured
+- **III. Error Handling & Observability**: Error handling strategy defined, logging approach specified
+- **IV. Financial Risk Management**: Risk controls planned (position limits, circuit breakers, validation)
+- **V. Security & API Key Management**: Secret management approach defined (no hardcoded credentials)
+- **VI. Data Integrity & Auditability**: Audit trail requirements identified, transaction safety planned
+- **VII. Performance & Latency**: Performance goals defined, latency optimization considered
+- **VIII. Simulation & Backtesting**: Backtesting strategy planned for trading logic (if applicable)
+
+For trading-related features, ALL principles apply. For infrastructure/non-trading features, principles II, III, V, VI apply.
 
 ## Project Structure
 
