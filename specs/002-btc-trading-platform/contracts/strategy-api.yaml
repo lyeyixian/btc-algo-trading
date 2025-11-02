@@ -1,0 +1,414 @@
+# Strategy API Contract
+# OpenAPI 3.0 specification for strategy management and execution
+
+openapi: 3.0.0
+info:
+  title: BTC Trading Platform - Strategy API
+  version: 1.0.0
+  description: |
+    API contract for managing trading strategies, backtesting, and trading sessions.
+    This is a CLI-based system, so these contracts define the programmatic interfaces
+    between components (not REST endpoints, but internal API boundaries).
+
+paths:
+  /strategies:
+    post:
+      summary: Create a new trading strategy
+      operationId: createStrategy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StrategyConfig'
+      responses:
+        '201':
+          description: Strategy created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Strategy'
+        '400':
+          description: Invalid strategy configuration
+        '409':
+          description: Strategy name already exists
+
+  /strategies/{strategyId}:
+    get:
+      summary: Get strategy details
+      operationId: getStrategy
+      parameters:
+        - name: strategyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Strategy details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Strategy'
+        '404':
+          description: Strategy not found
+
+  /strategies/{strategyId}/backtest:
+    post:
+      summary: Run backtest for a strategy
+      operationId: runBacktest
+      parameters:
+        - name: strategyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BacktestRequest'
+      responses:
+        '200':
+          description: Backtest completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BacktestResult'
+        '400':
+          description: Invalid backtest parameters
+        '404':
+          description: Strategy not found
+
+  /sessions:
+    post:
+      summary: Create a new trading session
+      operationId: createSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionConfig'
+      responses:
+        '201':
+          description: Session created and started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradingSession'
+        '400':
+          description: Invalid session configuration
+
+  /sessions/{sessionId}:
+    get:
+      summary: Get session status
+      operationId: getSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradingSession'
+        '404':
+          description: Session not found
+
+  /sessions/{sessionId}/stop:
+    post:
+      summary: Stop a trading session
+      operationId: stopSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Session stopped
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceReport'
+        '404':
+          description: Session not found
+        '400':
+          description: Session already stopped
+
+  /sessions/{sessionId}/metrics:
+    get:
+      summary: Get real-time risk metrics
+      operationId: getMetrics
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Current risk metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskMetrics'
+        '404':
+          description: Session not found
+
+components:
+  schemas:
+    StrategyConfig:
+      type: object
+      required:
+        - name
+        - type
+        - config
+        - risk_limits
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        type:
+          type: string
+          enum: [TREND_FOLLOWING, MEAN_REVERSION, GRID_TRADING, ORDER_CHASING]
+        config:
+          type: object
+          description: Strategy-specific configuration parameters
+        risk_limits:
+          $ref: '#/components/schemas/RiskLimits'
+
+    Strategy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+          enum: [TREND_FOLLOWING, MEAN_REVERSION, GRID_TRADING, ORDER_CHASING]
+        config:
+          type: object
+        risk_limits:
+          $ref: '#/components/schemas/RiskLimits'
+        status:
+          type: string
+          enum: [INACTIVE, ACTIVE, PAUSED, STOPPED]
+        created_at:
+          type: string
+          format: date-time
+
+    RiskLimits:
+      type: object
+      required:
+        - max_position_size
+        - max_drawdown_threshold
+        - warning_drawdown_threshold
+      properties:
+        max_position_size:
+          type: number
+          minimum: 0
+          description: Maximum position size in base currency
+        max_drawdown_threshold:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Auto-shutdown drawdown percentage
+        warning_drawdown_threshold:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Warning level drawdown percentage
+
+    BacktestRequest:
+      type: object
+      required:
+        - start_date
+        - end_date
+      properties:
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        initial_balance:
+          type: number
+          default: 10000
+          minimum: 0
+        transaction_cost_percent:
+          type: number
+          default: 0.1
+          minimum: 0
+          maximum: 10
+
+    BacktestResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        strategy_id:
+          type: string
+          format: uuid
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        total_return:
+          type: number
+          description: Percentage return
+        sharpe_ratio:
+          type: number
+        max_drawdown:
+          type: number
+          description: Percentage drawdown
+        win_rate:
+          type: number
+          description: Percentage of winning trades
+        profit_factor:
+          type: number
+        number_of_trades:
+          type: integer
+          minimum: 0
+        total_transaction_costs:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+
+    SessionConfig:
+      type: object
+      required:
+        - mode
+        - strategy_ids
+        - initial_balance
+      properties:
+        mode:
+          type: string
+          enum: [PAPER, LIVE]
+        strategy_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: List of strategy IDs to run in this session
+        initial_balance:
+          type: number
+          minimum: 0
+
+    TradingSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mode:
+          type: string
+          enum: [PAPER, LIVE]
+        status:
+          type: string
+          enum: [RUNNING, PAUSED, STOPPED, COMPLETED]
+        initial_balance:
+          type: number
+        current_balance:
+          type: number
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+          nullable: true
+        active_strategies:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    PerformanceReport:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+          format: uuid
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        total_return:
+          type: number
+        sharpe_ratio:
+          type: number
+        max_drawdown:
+          type: number
+        win_rate:
+          type: number
+        number_of_trades:
+          type: integer
+        strategy_breakdown:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              strategy_id:
+                type: string
+                format: uuid
+              total_return:
+                type: number
+              number_of_trades:
+                type: integer
+
+    RiskMetrics:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        portfolio:
+          type: object
+          properties:
+            current_drawdown:
+              type: number
+            max_drawdown:
+              type: number
+            exposure:
+              type: number
+        strategies:
+          type: array
+          items:
+            type: object
+            properties:
+              strategy_id:
+                type: string
+                format: uuid
+              current_drawdown:
+                type: number
+              max_drawdown:
+                type: number
+              exposure:
+                type: number
+
